@@ -4,9 +4,14 @@ import { SignupComponent } from './signup/signup.component';
 import { AppComponent } from './app.component';
 import { ProfileComponent } from './profile/profile.component';
 import { HomeComponent } from './home/home.component';
+import { NotificationComponent } from './notification/notification.component';
+import { NewsfeedComponent } from './newsfeed/newsfeed.component';
+
 
 export const routes: Routes =
  [{path:'login', component: LoginComponent},
   {path: 'signup', component: SignupComponent},
   {path: 'profile', component: ProfileComponent},
-  {path: 'home', component: HomeComponent}];
+  {path: 'home', component: HomeComponent},
+  {path: 'notification',component:NotificationComponent},
+   {path: 'newsfeed',component: NewsfeedComponent}];
