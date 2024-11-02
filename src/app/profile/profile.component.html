@@ -1,0 +1,31 @@
+<mat-sidenav-container style="height: 100vh;">
+    
+    <mat-sidenav #sidenav mode="side" opened="false" style="width: 100px;background-color: aliceblue;">
+        <p>
+            <a routerLink="/login">login</a>
+        </p>
+        <p>
+            <a routerLink="/signup">signup</a>
+        </p>
+        <p>   
+            <a routerLink="/home">home</a>
+        </p>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+        <mat-toolbar color="primary">
+
+            <button mat-icon-button (click)="sidenav.toggle()">
+                <mat-icon>menu</mat-icon>
+            </button>
+
+        Campus.xyz</mat-toolbar>
+
+        <mat-grid-list cols="3" gutterSize="10px" rowHeight="100px">
+            @for (tile of tiles; track $index) {
+                <mat-grid-tile [colspan]="tile.cols" [rowspan]="tile.rows">{{tile.text}}</mat-grid-tile>
+            }
+        </mat-grid-list>
+        <router-outlet></router-outlet>
+    </mat-sidenav-content>
+</mat-sidenav-container>

@@ -1,0 +1,32 @@
+<mat-toolbar color="accent">Campus.xyz</mat-toolbar>
+  <form 
+  style="display: flex;
+  align-items: center;
+  justify-content: top;
+  height: 100vh;
+  flex-direction: column;
+  gap: 10px;
+  width: 300px;
+  margin: auto ;"
+
+  [formGroup]="form"
+  >
+  <mat-label style="font-size: large; font-style: oblique;">Log In</mat-label>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input type="text" matInput placeholder="Email" 
+      required="" formControlName="email"/>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Password</mat-label>
+        <input type="text" matInput placeholder="Password" 
+        required="" formControlName="password"/>
+      </mat-form-field>
+
+
+    <button mat-raised-button color="accent" (click)="click()" >Submit</button>
+
+  </form>
+

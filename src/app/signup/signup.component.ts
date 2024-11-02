@@ -10,12 +10,10 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatButton, MatFabButton } from '@angular/material/button';
 
-
 @Component({
-  selector: 'app-root',
+  selector: 'app-signup',
   standalone: true,
-  imports: [
-    CommonModule,
+  imports: [CommonModule,
     RouterOutlet, 
     MatSlideToggleModule, 
     MatDatepickerModule, 
@@ -27,12 +25,23 @@ import { MatButton, MatFabButton } from '@angular/material/button';
     MatButton,
     MatFabButton,
     RouterModule],
-
-
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  templateUrl: './signup.component.html',
+  styleUrl: './signup.component.css'
 })
-export class AppComponent {
+export class SignupComponent {
+  constructor(private router: Router) { }
+ fb = inject(FormBuilder);
+  
 
-
+  form = this.fb.group({
+    name: [''],
+    department: [''],
+    dateOfbirth: [''],
+  })
+  
+  
+  showDetails(name:String, department: String){
+    console.log('name: ' + name + ', dept: ' + department );
+    this.router.navigate(['/login'])
+  }
 }

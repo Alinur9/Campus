@@ -1,0 +1,42 @@
+<mat-toolbar color="accent">Campus.xyz</mat-toolbar>
+<form 
+style="display: flex;
+align-items: center;
+justify-content: center;
+height: 100vh;
+flex-direction: column;
+gap: 10px;
+width: 300px;
+margin: auto ;"
+
+[formGroup]="form"
+>
+<mat-label style="font-size: large; font-style: oblique; width: 100px;" >Sign Up</mat-label>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Enter Name</mat-label>
+    <input type="text" matInput placeholder="Name" 
+    required="" formControlName="name" #name/>
+    <mat-error>Name is Required</mat-error>
+  </mat-form-field>
+  
+  <mat-form-field appearance="fill">
+    <mat-label>Select your Department</mat-label>
+    <mat-select formControlName="department" #dept>
+      <mat-option value="CSE">CSE</mat-option>
+      <mat-option value="BBA">BBA</mat-option>
+      <mat-option value="LAW">LAW</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Date Of Birth</mat-label>
+    <input matInput [matDatepicker]="picker" 
+    formControlName="dateOfbirth"/>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" (click)="showDetails(name.value, dept.value)">Submit</button>
+
+</form>
