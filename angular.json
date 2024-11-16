@@ -66,6 +66,7 @@
               "buildTarget": "campus:build:production"
             },
             "development": {
+              "proxyConfig": "proxy.conf.json",
               "buildTarget": "campus:build:development"
             }
           },

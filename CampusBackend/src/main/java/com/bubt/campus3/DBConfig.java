@@ -1,8 +1,11 @@
-package DB;
+package com.bubt.campus3;
 
-import Objects.User;
 
-import java.sql.*;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 public class DBConfig {
     public static Connection getConnection (){
@@ -18,21 +21,27 @@ public class DBConfig {
     public static User getUserById(String id) {
         try {
             Connection connection = getConnection();
-            String getNameStmt = "select * from user where id = " + id;
+            String getNameStmt = "select * from user where id = \"" + id +"\"";
+
             PreparedStatement preparedStatement = connection.prepareStatement(getNameStmt);
             ResultSet rs = preparedStatement.executeQuery();
-            return new User(rs.getString("name"), Integer.parseInt(id));
+            if(!rs.next()){
+                return  null;
+            }
+
+            return new User(rs.getString("name"), Integer.parseInt(id), rs.getString("department"));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static void putUser(String id, String name, String password){
+    public static void putUser(int id, String name, String password, String department){
         try {
             Connection connection = getConnection();
-            String putStmt = "insert into user (id, name, password) values (" +id + ", " + name + ", " + password + ")";
+            String putStmt = "insert into user (id, name, password, department) values " +
+                    "(" +id + ", \"" + name + "\", \"" + password + "\", \"" + department + "\")";
             PreparedStatement preparedStatement = connection.prepareStatement(putStmt);
-            preparedStatement.executeQuery();
+            preparedStatement.executeUpdate();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
