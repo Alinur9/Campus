@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, Router,RouterModule } from '@angular/router';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle'
@@ -9,6 +9,8 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatButton, MatFabButton } from '@angular/material/button';
+import { LoginService } from '../login.service';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 
 @Component({
@@ -25,22 +27,48 @@ import { MatButton, MatFabButton } from '@angular/material/button';
     ReactiveFormsModule,
     MatToolbarModule,
     MatButton,
+    HttpClientModule,
     MatFabButton,],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers:[HttpClient],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  constructor(private router:Router) {}
+  constructor(private router:Router, private login: LoginService) {}
   fb = inject(FormBuilder);
   
 
+  hide = signal(true)
   form = this.fb.group({
     email: [''],
     password: [''],
   })
 
-  click(){
-    this.router.navigate(['/profile'])
+  click(email:string, password: string){
+
+    this.login.postLoginInformation({name: "a", department: "a", password:password, email:email})
+    .subscribe(
+      {error: e=>console.log("error: " + e),
+       next: logResp => {console.log("success")
+       this.router.navigate(['/user'])
+       
+    }
+    }
+    )
+
+    // this.login.getUserByEmail(email, password)
+    // .subscribe(
+    //   {error: e=> console.log("error: " + e),
+    //    next: User=> {
+    //     this.router.navigate(['/user'])
+        
+    //    }
+    // }
+      
+
+    // )
+   // this.router.navigate(['/profile'])
   }
   
 }

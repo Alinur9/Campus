@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.UUID;
 
 @WebServlet("/api/reg/*")
 public class SignUpServlet extends HttpServlet {
@@ -46,9 +47,9 @@ public class SignUpServlet extends HttpServlet {
 
 
         System.out.println("id: " + id);
-        User user = DBConfig.getUserById(id + "");
+        User user = DBConfig.getUserByEmail(id + "");
         if (user == null){
-            user = new User("Ali", 100, "CSE");
+            user = new User("Ali", "qwef", "CSE", "random@random.com");
         }
 
 
@@ -63,11 +64,12 @@ public class SignUpServlet extends HttpServlet {
 
         User user = gson.fromJson(request.getReader(), User.class);
         String name = user.getName();
-        int id = 2;
         String password = user.getPassword();
         String department = user.getDepartment();
+        String id = name + UUID.randomUUID() + department;
+        String email = user.getEmail();
         System.out.println(user);
 
-        DBConfig.putUser(id, name, password, department);
+        DBConfig.putUser(id, name, password, department, email);
     }
 }

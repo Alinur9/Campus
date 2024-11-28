@@ -1,12 +1,12 @@
 /* Container for the entire newsfeed */
-.newsfeed-container {
+/* .newsfeed-container {
     max-width: 600px;
     margin: 0 auto;
     font-family: Arial, sans-serif;
-}
+} */
 
 /* Create Post Section */
-.create-post {
+/* .create-post {
     display: flex;
     flex-direction: column;
     padding: 10px;
@@ -38,7 +38,7 @@
 
 .create-post button:hover {
     background-color: #0056b3;
-}
+} */
 
 /* Post Section */
 .posts .post {

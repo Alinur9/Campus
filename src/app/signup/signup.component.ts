@@ -46,22 +46,23 @@ export class SignupComponent {
     dateOfbirth: [''],
     password: [''],
     confirmPassword: [''],
+    email: ['']
   })
   
   
-  showDetails(name:string, department: string, password: string){
-    console.log('name: ' + name + ', dept: ' + department );
+  showDetails(name:string, department: string, password: string, email: string){
+    console.log('name: ' + name + ', dept: ' + department + ', email: ' + email );
 
-    this.regService.postSignupInformation({name:name, department: department, password: password})
+    this.regService.postSignupInformation({name:name, department: department, password: password, email: email})
     .subscribe(
       {error:e=>console.log("error: ", e),
       
       next: regResp=>{
         console.log("success!!")
+     this.router.navigate(['/login'])
       }
     }, 
     )
-     this.router.navigate(['/login'])
   }
 
   hide= signal(true)

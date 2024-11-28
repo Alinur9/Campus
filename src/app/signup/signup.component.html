@@ -30,6 +30,13 @@ margin: auto ;"
   </mat-form-field>
 
   <mat-form-field appearance="fill">
+    <mat-label>Enter Email</mat-label>
+    <input type="text" matInput placeholder="Email" 
+    required="" formControlName="email" #email/>
+    <mat-error>Name is Required</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
     <mat-label>Date Of Birth</mat-label>
     <input matInput [matDatepicker]="picker" 
      formControlName="dateOfbirth"/>
@@ -54,6 +61,6 @@ margin: auto ;"
 
   </mat-form-field> -->
 
-  <button mat-raised-button color="primary" (click)="showDetails(name.value, dept.value, password.value)">Submit</button>
+  <button mat-raised-button color="primary" (click)="showDetails(name.value, dept.value, password.value, email.value)">Submit</button>
 
 </form>

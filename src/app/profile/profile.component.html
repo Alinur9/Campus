@@ -2,10 +2,10 @@
     
     <mat-sidenav #sidenav mode="side" opened="false" style="width: 100px;background-color: aliceblue;">
         <p>
-            <a routerLink="/login">login</a>
+            <a routerLink="/profile">feed</a>
         </p>
         <p>
-            <a routerLink="/signup">signup</a>
+            <a routerLink="/user">profile</a>
         </p>
         <p>   
             <a routerLink="/home">home</a>
@@ -21,11 +21,44 @@
 
         Campus.xyz</mat-toolbar>
 
-        <mat-grid-list cols="3" gutterSize="10px" rowHeight="100px">
+        <div class="newsfeed-container">
+            <!-- Create Post Section -->
+            <div class="create-post">
+                <textarea placeholder="What's on your mind?" #text></textarea>
+                <button type="button" (click)="putPost(text.value)">Post</button>
+            </div>
+        </div>  
+        
+         <!-- Newsfeed Posts Section -->
+    <div class="posts">
+        
+        @for (item of postArr; track $index) {
+            <div class="post">
+                <div class="post-header">
+                    <img src="profile-pic.jpg" alt="User Profile" class="profile-pic">
+                    <div>
+                        <h4>{{item.name}}</h4>
+                        <span>2 hrs ago</span>
+                    </div>
+                </div>
+                <p class="post-content">
+                    {{item.text}}
+                </p>
+                <div class="post-actions">
+                    <p>{{item.likes}} likes</p>
+                    <button (click)="like(item.likes, item.email, item.id, item.status)">{{item.status}}</button>
+                    <button>Comment</button>
+                    <button>Share</button>
+                </div>
+            </div>
+        }
+    </div>
+    
+        <!-- <mat-grid-list cols="1" gutterSize="10px" rowHeight="100px">
             @for (tile of tiles; track $index) {
-                <mat-grid-tile [colspan]="tile.cols" [rowspan]="tile.rows">{{tile.text}}</mat-grid-tile>
+                <mat-grid-tile [colspan]="1" [rowspan]="1">{{tile}}</mat-grid-tile>
             }
-        </mat-grid-list>
+        </mat-grid-list> -->
         <router-outlet></router-outlet>
     </mat-sidenav-content>
 </mat-sidenav-container>

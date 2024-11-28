@@ -4,16 +4,19 @@ package com.bubt.campus3;
 
 public class User {
     private String name;
-    private int id;
+    private String id;
     private String password;
     private String department;
+    private String email;
 
-    public User(String name, int id, String department){
+    public User(String name, String id, String department, String email){
         this.name = name;
         this.id = id;
+        this.department = department;
+        this.email = email;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -26,6 +29,9 @@ public class User {
     }
     public String getPassword(){
         return password;
+    }
+    public String getEmail(){
+        return email;
     }
 
 
