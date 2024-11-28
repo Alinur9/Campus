@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle'
 import { MatInputModule } from '@angular/material/input'
@@ -9,6 +9,9 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatButton, MatFabButton } from '@angular/material/button';
+import { RegistrationService } from '../registration.service';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-signup',
@@ -24,12 +27,16 @@ import { MatButton, MatFabButton } from '@angular/material/button';
     MatToolbarModule,
     MatButton,
     MatFabButton,
-    RouterModule],
+    HttpClientModule,
+    RouterModule,
+    MatIconModule],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers:[HttpClient],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.css'
 })
 export class SignupComponent {
-  constructor(private router: Router) { }
+  constructor(private router: Router, private regService: RegistrationService) { }
  fb = inject(FormBuilder);
   
 
@@ -37,11 +44,30 @@ export class SignupComponent {
     name: [''],
     department: [''],
     dateOfbirth: [''],
+    password: [''],
+    confirmPassword: [''],
+    email: ['']
   })
   
   
-  showDetails(name:String, department: String){
-    console.log('name: ' + name + ', dept: ' + department );
-    this.router.navigate(['/login'])
+  showDetails(name:string, department: string, password: string, email: string){
+    console.log('name: ' + name + ', dept: ' + department + ', email: ' + email );
+
+    this.regService.postSignupInformation({name:name, department: department, password: password, email: email})
+    .subscribe(
+      {error:e=>console.log("error: ", e),
+      
+      next: regResp=>{
+        console.log("success!!")
+     this.router.navigate(['/login'])
+      }
+    }, 
+    )
   }
+
+  hide= signal(true)
+  // clickEvent(event: MouseEvent){
+  //   this.hide.set( !this.hide())
+  //   event.stopPropagation();
+  // }
 }

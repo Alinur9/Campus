@@ -13,20 +13,23 @@
   >
   <mat-label style="font-size: large; font-style: oblique;">Log In</mat-label>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Email</mat-label>
-      <input type="text" matInput placeholder="Email" 
-      required="" formControlName="email"/>
-    </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Enter Email</mat-label>
+    <input type="text" matInput placeholder="Email" 
+    required="" formControlName="email" #email/>
+    <mat-error>Email is Required</mat-error>
+  </mat-form-field>
 
-    <mat-form-field appearance="fill">
-        <mat-label>Password</mat-label>
-        <input type="text" matInput placeholder="Password" 
-        required="" formControlName="password"/>
-      </mat-form-field>
+  <mat-form-field>
+    <mat-label> New Password</mat-label>
+    <input matInput [type]="hide() ? 'password' : 'text'" 
+    required="" formControlName = "password" #password/>
+    <mat-error>Password is required</mat-error>
+
+  </mat-form-field>
 
 
-    <button mat-raised-button color="accent" (click)="click()" >Submit</button>
+    <button mat-raised-button color="accent" (click)="click(email.value, password.value)" >Submit</button>
 
   </form>
 
