@@ -4,12 +4,10 @@ package com.bubt.campus3;
 
 import java.io.FileOutputStream;
 import java.security.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.CompletionException;
 
 public class DBConfig {
     public static Connection getConnection (){
@@ -79,12 +77,13 @@ public class DBConfig {
         LocalDateTime time = LocalDateTime.now();
         String timeStr = time.toString();
         int likes = 0;
+        int comments = 0;
         String id = UUID.randomUUID() + name;
         try {
             Connection connection = getConnection();
-            String putStmt = "insert into post ( name, email, text, time, likes, id) values " +
+            String putStmt = "insert into post ( name, email, text, time, likes, id, comments) values " +
                     "(\""  + name + "\",  \"" + email + "\", \"" + text + "\", \"" + timeStr + "\", " + likes + ", \""
-                    + id +"\" )";
+                    + id +"\"" +  comments + ")";
             PreparedStatement preparedStatement = connection.prepareStatement(putStmt);
             preparedStatement.executeUpdate();
         } catch (Exception e) {
@@ -99,10 +98,6 @@ public class DBConfig {
 
             PreparedStatement preparedStatement = connection.prepareStatement(getNameStmt);
             ResultSet rs = preparedStatement.executeQuery();
-//            if (!rs.next()) {
-//                return null;
-//            }
-
             ArrayList<String> likedPosts = getLikedPosts(email);
             Stack<Post> postStack = new Stack<>();
 
@@ -113,7 +108,8 @@ public class DBConfig {
                                      rs.getString("text"),
                                      rs.getString("email"),
                                      rs.getInt("likes"),
-                                     rs.getString("id"));
+                                     rs.getString("id"),
+                                     rs.getInt("comments"));
                 post.setTime(rs.getString("time"));
                 if (likedPosts.contains(rs.getString("id"))){
                     post.setStatus();
@@ -150,6 +146,29 @@ public class DBConfig {
             throw new RuntimeException(e);
         }
     }
+    public static Post getSinglePost(String id){
+        try {
+            Connection connection = getConnection();
+            String getNameStmt = "select * from post where id = \"" + id + "\"";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(getNameStmt);
+            ResultSet rs = preparedStatement.executeQuery();
+            if (!rs.next()){
+             return null;
+            }
+
+            Post post = new Post(rs.getString("name"),
+                                 rs.getString("text"),
+                                 rs.getString("email"),
+                                 rs.getInt("likes"),
+                                 id, rs.getInt("comments"));
+            return post;
+
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
     public static void putLike(String id, String email, int likes){
         try {
             Connection connection = getConnection();
@@ -167,6 +186,53 @@ public class DBConfig {
             throw new RuntimeException(e);
         }
     }
+
+    public static Comment[] getComments(String id){
+        try {
+            Connection connection = getConnection();
+            String getNameStmt = "select * from comment where id = \"" + id + "\"";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(getNameStmt);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            ArrayList<Comment> list = new ArrayList<>();
+            while (rs.next()){
+                Comment comment = new Comment(rs.getString("id"),
+                                              rs.getString("name"),
+                                              rs.getString("email"),
+                                              rs.getString("text"),
+                                              0);
+                list.add(comment);
+            }
+            return list.toArray(list.toArray(new Comment[0]));
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+    public static void putComment (Comment comment){
+        try {
+            Connection connection = getConnection();
+            String id = comment.getId();
+            String email = comment.getEmail();
+            String name = comment.getName();
+            String text = comment.getText();
+            int comments = comment.getComments();
+            comments++;
+
+            System.out.printf("Setting like: %d to id: %s\n", comments, id );
+            String putStmt = "update post set comments = " + comments +" where id = \"" + id + "\"";
+            System.out.println(putStmt);
+            PreparedStatement preparedStatement = connection.prepareStatement(putStmt);
+            preparedStatement.executeUpdate();
+
+             putStmt = "insert into comment (id, email, name, text) values (\"" + id + "\", \"" + email + "\", \"" + name + "\", \"" + text +"\")";preparedStatement = connection.prepareStatement(putStmt);
+            preparedStatement.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     public static void main(String[] args) {
         getConnection();

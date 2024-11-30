@@ -22,12 +22,21 @@ export interface Post{
     likes: number
     id: string
     status: string
+    comments: number
 }
 
 export interface Like {
     likes : number
     email: string
     id: string
+}
+
+export interface Comment {
+    name: string
+    id: string
+    email: string
+    text: string
+    comments: number
 }
 
 export interface PostResponse{

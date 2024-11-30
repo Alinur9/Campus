@@ -1,0 +1,69 @@
+<mat-sidenav-container style="height: 100vh;">
+    
+    <mat-sidenav #sidenav mode="side" opened="false" style="width: 100px;background-color: aliceblue;">
+        <p>
+            <a routerLink="/profile">feed</a>
+        </p>
+        <p>
+            <a routerLink="/user">profile</a>
+        </p>
+        <p>   
+            <a routerLink="/home">home</a>
+        </p>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+        <mat-toolbar color="primary">
+
+            <button mat-icon-button (click)="sidenav.toggle()">
+                <mat-icon>menu</mat-icon>
+            </button>
+
+        Campus.xyz</mat-toolbar>
+
+ 
+        <div class="posts">
+        
+                <div class="post">
+                    <div class="post-header">
+                        <img src="profile-pic.jpg" alt="User Profile" class="profile-pic">
+                        <div>
+                            <h4>{{post.name}}</h4>
+                            <span>2 hrs ago</span>
+                        </div>
+                    </div>
+                    <p class="post-content">
+                        {{post.text}}
+                    </p>
+                    <div class="post-actions">
+                        <p>{{post.likes}} likes, {{post.comments}} comments</p>
+                        <button>Share</button>
+                    </div>
+                </div>
+                <div class="newsfeed-container">
+                    <!-- Create Post Section -->
+                    <div class="create-post">
+                        <textarea placeholder="make a comment" #text></textarea>
+                        <button type="button" (click)="putComment(text.value)">comment</button>
+                    </div>
+                </div> 
+                <p>    comments</p>
+                @for (item of comments; track $index) {
+                    <div class="post">
+                        <div class="post-header">
+                            <img src="profile-pic.jpg" alt="User Profile" class="profile-pic">
+                            <div>
+                                <h4>{{item.name}}</h4>
+                                <span>2 hrs ago</span>
+                            </div>
+                        </div>
+                        <p class="post-content">
+                            {{item.text}}
+                        </p>
+                    </div>
+                }
+        </div>
+
+    </mat-sidenav-content>
+</mat-sidenav-container>
+

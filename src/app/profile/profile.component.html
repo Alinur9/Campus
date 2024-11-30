@@ -45,9 +45,9 @@
                     {{item.text}}
                 </p>
                 <div class="post-actions">
-                    <p>{{item.likes}} likes</p>
+                    <p>{{item.likes}} likes, {{item.comments}} comments</p>
                     <button (click)="like(item.likes, item.email, item.id, item.status)">{{item.status}}</button>
-                    <button>Comment</button>
+                    <button (click)="comment(item.id)">Comment</button>
                     <button>Share</button>
                 </div>
             </div>
