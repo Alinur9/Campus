@@ -7,6 +7,7 @@ import { HomeComponent } from './home/home.component';
 import { NotificationComponent } from './notification/notification.component';
 import { NewsfeedComponent } from './newsfeed/newsfeed.component';
 import { UserComponent } from './user/user.component';
+import { CommentComponent } from './comment/comment.component';
 
 
 export const routes: Routes =
@@ -16,4 +17,5 @@ export const routes: Routes =
   {path: 'home', component: HomeComponent},
   {path: 'notification',component:NotificationComponent},
    {path: 'newsfeed',component: NewsfeedComponent},
-  {path: "user", component: UserComponent}];
+  {path: "user", component: UserComponent},
+  {path: "comment", component: CommentComponent}];

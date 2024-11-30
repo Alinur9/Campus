@@ -7,14 +7,16 @@ public class Post {
    private String time;
    private int likes;
    private String id;
+   private int comments;
    private String status = "like";
 
-   public Post(String name, String text, String email, int likes, String id){
+   public Post(String name, String text, String email, int likes, String id, int comments){
        this.name = name;
        this.text = text;
        this.email = email;
        this.id = id;
        this.likes = likes;
+       this.comments = comments;
    }
 
     public String getEmail(){
@@ -43,6 +45,10 @@ public class Post {
     public String setStatus() {
         status = "liked";
         return status;
+    }
+
+    public int getComments() {
+        return comments;
     }
 
     public String getStatus() {

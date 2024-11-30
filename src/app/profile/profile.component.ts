@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav'
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router, RouterOutlet } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatGridListModule } from '@angular/material/grid-list'
@@ -12,6 +12,7 @@ import { MatCardModule } from '@angular/material/card';
 import { NewsfeedComponent } from '../newsfeed/newsfeed.component';
 import { PostService } from '../post.service';
 import { Post } from '../models';
+import { CommonModule, DOCUMENT } from '@angular/common';
 
 
 @Component({
@@ -23,8 +24,10 @@ import { Post } from '../models';
             MatButtonModule,
             MatIconModule,
             FlexLayoutModule,
+            CommonModule,
             MatGridListModule,
             MatCardModule,
+            RouterOutlet,
             HttpClientModule],
 
   providers:[HttpClient],
@@ -36,7 +39,7 @@ export class ProfileComponent {
   dept: string = ""
   email: string = ""
 
-  constructor(private post: PostService, private login: LoginService){
+  constructor(private post: PostService, private login: LoginService, private router: Router, @Inject(DOCUMENT) private document : Document){
     this.login.getLoggedUser()
     .subscribe({
       error: e=> console.log("errror: " + e),
@@ -53,7 +56,7 @@ export class ProfileComponent {
 putPost(text: string){
   this.post.putUserPost({
    name: this.name, email: this.email,
-    text: text, likes : 0, id: this.name, status: "like"
+    text: text, likes : 0, id: this.name, status: "like", comments: 0
   }).subscribe ({
     error: e=> console.log("error: " + e),
     next: postResp => {
@@ -96,6 +99,19 @@ putPost(text: string){
     
   }
 
+
+  comment(id: string){
+    const localStorage = this.document.defaultView?.localStorage
+
+    if(localStorage){
+    localStorage.setItem("post", id)
+    localStorage.setItem("name", this.name)
+    localStorage.setItem("email", this.email)
+    this.router.navigate(['/comment'])
+    }
+    
+
+  }
   
   
   likedArr: string[] = new Array()
