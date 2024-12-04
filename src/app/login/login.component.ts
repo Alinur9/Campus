@@ -28,6 +28,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
     MatToolbarModule,
     MatButton,
     HttpClientModule,
+    RouterModule,
     MatFabButton,],
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers:[HttpClient],
@@ -35,7 +36,20 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  constructor(private router:Router, private login: LoginService) {}
+  constructor(private router:Router, private login: LoginService) {
+    this.login.getLoggedUser().subscribe({
+      error: e=> console.log("error: " + e),
+      next: u => {
+        if(u.email === "null"){
+          this.router.navigate(["/login"])
+        }
+        else {
+          this.router.navigate(["/user"])
+        }
+      }
+    })
+  }
+
   fb = inject(FormBuilder);
   
 

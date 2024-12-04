@@ -4,7 +4,7 @@ import com.bubt.campus3.DBConfig;
 import com.bubt.campus3.Post;
 import com.bubt.campus3.User;
 import com.google.gson.Gson;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -27,7 +27,6 @@ import java.util.Date;
 public class LoginServlet extends HttpServlet {
 
     private final Gson gson = new Gson();
-    public static User loggedUser;
 
 
     @Override
@@ -37,14 +36,15 @@ public class LoginServlet extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        User user = loggedUser;
-        System.out.println(loggedUser.getName());
-        System.out.println(loggedUser.getDepartment());
+        User user = getLoggedInUser(request);
+
         if (user == null){
-            user = new User("Ali", "qwwee", "CSE", "random@random.com");
+            user = new User("Ali", "null", "CSE", "null");
         }
 
 
+        System.out.println(user.getName());
+        System.out.println(user.getDepartment());
         if (user != null) {
             response.getWriter().write(gson.toJson(user));
         }
@@ -52,6 +52,40 @@ public class LoginServlet extends HttpServlet {
             response.getOutputStream().println("{}");
         }
     }
+
+
+    public static User getLoggedInUser(HttpServletRequest req){
+        String sid = getSessionId(req);
+        if (sid == null){
+            return null;
+        }
+
+
+        Jwt<Header, Claims> jwt = Jwts.parser().parseClaimsJwt(sid);
+
+        Claims body = jwt.getBody();
+        String id = body.getId();
+        String name = body.get("name", String.class);
+        String email = body.get("email", String.class);
+        String department = body.get("department", String.class);
+        return new User(name, id, department, email);
+    }
+
+    public static String getSessionId(HttpServletRequest req) {
+        if (null == req.getCookies()){
+            return null;
+        }
+        for (Cookie cookie : req.getCookies()) {
+           if("sessionId".equals(  cookie.getName())){
+               return cookie.getValue();
+            }
+        }
+
+        return null;
+    }
+
+
+
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         User user = gson.fromJson(request.getReader(), User.class);
@@ -63,7 +97,6 @@ public class LoginServlet extends HttpServlet {
             User corrUser = DBConfig.getUserByEmail(email);
             String jwtToken = generateToken(corrUser);
             System.out.println("token: " + jwtToken);
-            loggedUser = corrUser;
 
             response.addCookie(new Cookie("sessionId",jwtToken));
           //  response.getOutputStream().write(gson.toJson());
@@ -83,6 +116,19 @@ public class LoginServlet extends HttpServlet {
         String name = post.getName();
         DBConfig.putPost(text, name, email);
         System.out.println("post posted successfully");
+    }
+
+    public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if (null == request.getCookies()){
+            response.getOutputStream().println("{logged out already");
+
+        }
+
+        Cookie cookie = new Cookie("sessionId", null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+
+
     }
 
     public String generateToken(User user){

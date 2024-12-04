@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle'
 import { MatInputModule } from '@angular/material/input'
@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatButton, MatFabButton } from '@angular/material/button';
+import { LoginService } from './login.service';
 
 
 @Component({
@@ -32,7 +33,15 @@ import { MatButton, MatFabButton } from '@angular/material/button';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
+
+  private cdr = inject(ChangeDetectorRef)
+  constructor(private login: LoginService, private router: Router){
+
+  }
+  ngOnInit(): void {
+
+  }
 
 }

@@ -83,10 +83,11 @@ public class DBConfig {
             Connection connection = getConnection();
             String putStmt = "insert into post ( name, email, text, time, likes, id, comments) values " +
                     "(\""  + name + "\",  \"" + email + "\", \"" + text + "\", \"" + timeStr + "\", " + likes + ", \""
-                    + id +"\"" +  comments + ")";
+                    + id +"\"," + comments + ")";
             PreparedStatement preparedStatement = connection.prepareStatement(putStmt);
             preparedStatement.executeUpdate();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -182,6 +183,20 @@ public class DBConfig {
             putStmt = "insert into likes (id, email) values (\"" + id + "\", \"" + email + "\")";
             preparedStatement = connection.prepareStatement(putStmt);
             preparedStatement.executeUpdate();
+
+            putStmt = "select * from post where id = \"" + id + "\"";
+
+            preparedStatement = connection.prepareStatement(putStmt);
+            ResultSet rs2 = preparedStatement.executeQuery();
+            if (!rs2.next()){
+                throw new RuntimeException("no post found");
+            }
+            String name = rs2.getString("name");
+
+            String action = "liked";
+            putStmt = "insert into notification (id, email, name, action) values (\"" + id + "\", \"" + email + "\", \"" + name + "\", \"" + action +"\")";
+            preparedStatement = connection.prepareStatement(putStmt);
+            preparedStatement.executeUpdate();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -226,9 +241,51 @@ public class DBConfig {
             PreparedStatement preparedStatement = connection.prepareStatement(putStmt);
             preparedStatement.executeUpdate();
 
-             putStmt = "insert into comment (id, email, name, text) values (\"" + id + "\", \"" + email + "\", \"" + name + "\", \"" + text +"\")";preparedStatement = connection.prepareStatement(putStmt);
+            putStmt = "insert into comment (id, email, name, text) values (\"" + id + "\", \"" + email + "\", \"" + name + "\", \"" + text +"\")";
+            preparedStatement = connection.prepareStatement(putStmt);
+            preparedStatement.executeUpdate();
+
+
+            String action = "commented";
+            putStmt = "insert into notification (id, email, name, action) values (\"" + id + "\", \"" + email + "\", \"" + name + "\", \"" + action +"\")";
+            preparedStatement = connection.prepareStatement(putStmt);
             preparedStatement.executeUpdate();
         } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static Notification[] getNotifications(String email){
+        try {
+            Connection connection = getConnection();
+            String getNameStmt = "select * from notification where email = \"" + email + "\"";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(getNameStmt);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            ArrayList<Notification> list = new ArrayList<>();
+            while (rs.next()){
+                getNameStmt = "select * from post where id = \"" + rs.getString("id") + "\"";
+
+                preparedStatement = connection.prepareStatement(getNameStmt);
+                ResultSet rs2 = preparedStatement.executeQuery();
+                if (!rs2.next()){
+                    throw new RuntimeException("no post found");
+                }
+                int likes = rs2.getInt("likes");
+                int comments = rs2.getInt("comments");
+
+                Notification notification = new Notification(rs.getString("id"),
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("action"));
+
+                notification.setComments(comments);
+                notification.setLikes(likes);
+                list.add(notification);
+            }
+            return list.toArray(list.toArray(new Notification[0]));
+        }catch (Exception e){
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }

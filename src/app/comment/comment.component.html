@@ -13,13 +13,28 @@
     </mat-sidenav>
 
     <mat-sidenav-content>
+        <div>
+
+        </div>
         <mat-toolbar color="primary">
 
             <button mat-icon-button (click)="sidenav.toggle()">
                 <mat-icon>menu</mat-icon>
             </button>
 
-        Campus.xyz</mat-toolbar>
+            <span>Campus.xyz</span>
+            <span class="fill-space"></span>
+
+            <button mat-raised-button color="primary"style="margin-right: 10px; color: aliceblue;" (click)="showNotifications()">
+                <mat-icon>notifications</mat-icon>
+            </button>
+            
+            <button mat-raised-button color="accent" (click)="logOut()">
+                logout
+            </button>
+
+        </mat-toolbar>
+        
 
  
         <div class="posts">
@@ -66,4 +81,3 @@
 
     </mat-sidenav-content>
 </mat-sidenav-container>
-

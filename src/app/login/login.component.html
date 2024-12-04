@@ -30,6 +30,11 @@
 
 
     <button mat-raised-button color="accent" (click)="click(email.value, password.value)" >Submit</button>
+    <router-outlet>
+      <p>
+        <a routerLink="/signup">Don't have an account?</a>
+      </p>
+    </router-outlet>
 
   </form>
 

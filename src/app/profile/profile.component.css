@@ -96,3 +96,7 @@ mat-grid-tile{
 .post-actions button:hover {
     color: #0056b3;
 }
+
+.fill-space {
+    flex: 1 1 auto;
+}
