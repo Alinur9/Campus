@@ -30,32 +30,60 @@ public class LoginServlet extends HttpServlet {
 
 
     @Override
-    protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doOptions(req, resp);
+    protected void doOptions(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+      //  allowCORS(resp);
     }
+
+//    public static void allowCORS(HttpServletResponse resp) {
+//        System.out.println("Option call on login servlet");
+//        resp.addHeader("Access-Control-Allow-Origin", "http://localhost:4200");
+//        resp.addHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, HEAD");
+//        resp.addHeader("Access-Control-Allow-Headers", "X-PINGOTHER, Origin, X-Requested-With, Content-Type, Accept, Authorization");
+//        resp.addHeader("Access-Control-Max-Age", "1728000");
+//        resp.addHeader("Access-Control-Allow-Credentials", "true");
+//    }
+
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        User user = getLoggedInUser(request);
+        try {
+//            String pathInfo = request
+//                    .getPathInfo();
+//
+//            pathInfo = pathInfo == null ? "" : pathInfo;
+//            pathInfo = pathInfo
+//                    .replaceAll("/$", "")
+//                    .replaceAll("^/", "");
+//
+//            System.out.println("Path info: " + pathInfo);
 
-        if (user == null){
-            user = new User("Ali", "null", "CSE", "null");
-        }
+
+            User user = getLoggedInUser(request);
+
+            if (user == null) {
+                user = new User("Ali", "null", "CSE", "null");
+            }
 
 
-        System.out.println(user.getName());
-        System.out.println(user.getDepartment());
-        if (user != null) {
-            response.getWriter().write(gson.toJson(user));
-        }
-        else {
-            response.getOutputStream().println("{}");
+            System.out.println(user.getName());
+            System.out.println(user.getDepartment());
+            if (user != null) {
+                response.getWriter().write(gson.toJson(user));
+            } else {
+                response.getOutputStream().println("{}");
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new IOException(e);
         }
     }
 
 
     public static User getLoggedInUser(HttpServletRequest req){
         String sid = getSessionId(req);
+        System.out.println("sessionId: " + sid);
         if (sid == null){
             return null;
         }
@@ -98,7 +126,16 @@ public class LoginServlet extends HttpServlet {
             String jwtToken = generateToken(corrUser);
             System.out.println("token: " + jwtToken);
 
-            response.addCookie(new Cookie("sessionId",jwtToken));
+
+            Cookie cookie  = new Cookie("sessionId", jwtToken);
+            cookie.setSecure(false);
+            cookie.setMaxAge(365*24*60*60);
+//           "sessionId=eyJhbGciOiJub25lIn0..; Max-Age=31536000; Expires=Tue, 09-Dec-2025 16:59:06 GM"
+            String cookiee = String.format("sessionId=%s; Max-Age=31536000; SameSite=Lax;  Path=/;  HttpOnly=true",jwtToken);
+
+            response.setHeader("Set-Cookie", cookiee);
+
+          //  response.addCookie(cookie);
           //  response.getOutputStream().write(gson.toJson());
             response.setStatus(200);
         }
@@ -124,20 +161,21 @@ public class LoginServlet extends HttpServlet {
 
         }
 
-        Cookie cookie = new Cookie("sessionId", null);
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
+//        Cookie cookie  = new Cookie("sessionId", jwtToken);
+//        cookie.setSecure(false);
+//        cookie.setMaxAge(365*24*60*60);
+//           "sessionId=eyJhbGciOiJub25lIn0..; Max-Age=31536000; Expires=Tue, 09-Dec-2025 16:59:06 GM"
+        String cookiee = String.format("sessionId=%s; Max-Age=0; SameSite=Lax;  Path=/;  HttpOnly=true",null);
+
+        response.setHeader("Set-Cookie", cookiee);
+
 
 
     }
 
     public String generateToken(User user){
         try {
-//            File privateFile = new File("private.key");
-//            byte[] privateBytes = Files.readAllBytes(privateFile.toPath());
-//            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-//            EncodedKeySpec keySpec = new X509EncodedKeySpec(privateBytes);
-//            PrivateKey privateKey = keyFactory.generatePrivate(keySpec);
+
             Instant now = Instant.now();
             String jwtToken = Jwts.builder()
                     .claim("name", user.getName())
@@ -145,7 +183,6 @@ public class LoginServlet extends HttpServlet {
                     .claim("email", user.getEmail())
                     .setId(user.getId())
                     .setIssuedAt(Date.from(now))
-                    .setExpiration(Date.from(now.plus(50L, ChronoUnit.MINUTES)))
                     .compact();
 
             return jwtToken;

@@ -4,4 +4,16 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
+
+
+
+<!--  <servlet>-->
+<!--    <servlet-name>Signup Servlet</servlet-name>-->
+<!--    <servlet-class>com.bubt.campus3.service.SignUpServlet</servlet-class>-->
+<!--  </servlet>-->
+
+<!--  <servlet-mapping>-->
+<!--    <servlet-name>Signup Servlet</servlet-name>-->
+<!--    <url-pattern>/api/reg/*</url-pattern>-->
+<!--  </servlet-mapping>-->
 </web-app>

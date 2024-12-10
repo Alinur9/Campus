@@ -2,6 +2,8 @@ package com.bubt.campus3;
 
 
 
+import com.bubt.campus3.service.LoginServlet;
+
 import java.io.FileOutputStream;
 import java.security.*;
 import java.sql.*;
@@ -92,6 +94,40 @@ public class DBConfig {
         }
     }
 
+    public static Post[] getUserPosts(String email){
+        try {
+            Connection connection = getConnection();
+            String getNameStmt = "select * from post where email = \"" + email + "\"";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(getNameStmt);
+            ResultSet rs = preparedStatement.executeQuery();
+            ArrayList<String> likedPosts = getLikedPosts(email);
+            Stack<Post> postStack = new Stack<>();
+
+
+            int i = 0;
+            while (rs.next()){
+                Post post = new Post(rs.getString("name"),
+                        rs.getString("text"),
+                        rs.getString("email"),
+                        rs.getInt("likes"),
+                        rs.getString("id"),
+                        rs.getInt("comments"));
+                post.setTime(rs.getString("time"));
+                if (likedPosts.contains(rs.getString("id"))){
+                    post.setStatus();
+                }
+
+                postStack.push(post);
+
+            }
+            return  postStack.toArray(new Post[0]);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException("Error getting posts");
+        }
+    }
     public static Post[] getPosts(String email){
         try {
             Connection connection = getConnection();
@@ -155,7 +191,8 @@ public class DBConfig {
             PreparedStatement preparedStatement = connection.prepareStatement(getNameStmt);
             ResultSet rs = preparedStatement.executeQuery();
             if (!rs.next()){
-             return null;
+                System.out.println("problem single post");
+                throw new RuntimeException("no post found");
             }
 
             Post post = new Post(rs.getString("name"),
@@ -170,7 +207,7 @@ public class DBConfig {
             throw new RuntimeException(e);
         }
     }
-    public static void putLike(String id, String email, int likes){
+    public static void putLike(String id, String email, String userEmail, String userName,int likes){
         try {
             Connection connection = getConnection();
             likes++;
@@ -180,25 +217,20 @@ public class DBConfig {
             PreparedStatement preparedStatement = connection.prepareStatement(putStmt);
             preparedStatement.executeUpdate();
 
-            putStmt = "insert into likes (id, email) values (\"" + id + "\", \"" + email + "\")";
+            putStmt = "insert into likes (id, email) values (\"" + id + "\", \"" + userEmail + "\")";
             preparedStatement = connection.prepareStatement(putStmt);
             preparedStatement.executeUpdate();
-
-            putStmt = "select * from post where id = \"" + id + "\"";
-
-            preparedStatement = connection.prepareStatement(putStmt);
-            ResultSet rs2 = preparedStatement.executeQuery();
-            if (!rs2.next()){
-                throw new RuntimeException("no post found");
-            }
-            String name = rs2.getString("name");
 
             String action = "liked";
-            putStmt = "insert into notification (id, email, name, action) values (\"" + id + "\", \"" + email + "\", \"" + name + "\", \"" + action +"\")";
+            putStmt = "insert into notification (id, email, name, action, sender) values (\""
+                    + id + "\", \"" + email + "\", \"" + userName + "\", \"" + action +"\", \"" + userEmail + "\")";
             preparedStatement = connection.prepareStatement(putStmt);
             preparedStatement.executeUpdate();
+
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
+
         }
     }
 
@@ -235,7 +267,7 @@ public class DBConfig {
             int comments = comment.getComments();
             comments++;
 
-            System.out.printf("Setting like: %d to id: %s\n", comments, id );
+            System.out.printf("Setting comment: %d to id: %s\n", comments, id );
             String putStmt = "update post set comments = " + comments +" where id = \"" + id + "\"";
             System.out.println(putStmt);
             PreparedStatement preparedStatement = connection.prepareStatement(putStmt);
@@ -245,9 +277,11 @@ public class DBConfig {
             preparedStatement = connection.prepareStatement(putStmt);
             preparedStatement.executeUpdate();
 
+            String ownerEmail = getSinglePost(id).getEmail();
 
             String action = "commented";
-            putStmt = "insert into notification (id, email, name, action) values (\"" + id + "\", \"" + email + "\", \"" + name + "\", \"" + action +"\")";
+            putStmt = "insert into notification (id, email, name, action, sender) values (\""
+                    + id + "\", \"" + ownerEmail + "\", \"" + name + "\", \"" + action +"\", \"" + email + "\")";
             preparedStatement = connection.prepareStatement(putStmt);
             preparedStatement.executeUpdate();
         } catch (Exception e) {
@@ -276,7 +310,7 @@ public class DBConfig {
 
                 Notification notification = new Notification(rs.getString("id"),
                         rs.getString("name"),
-                        rs.getString("email"),
+                        rs.getString("sender"),
                         rs.getString("action"));
 
                 notification.setComments(comments);
@@ -289,6 +323,7 @@ public class DBConfig {
             throw new RuntimeException(e);
         }
     }
+
 
 
     public static void main(String[] args) {

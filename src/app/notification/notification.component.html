@@ -5,7 +5,7 @@
             <a routerLink="/profile">feed</a>
         </p>
         <p>
-            <a routerLink="/user">profile</a>
+            <a routerLink="/p2">profile</a>
         </p>
         <p>   
             <a routerLink="/home">home</a>
@@ -44,7 +44,7 @@
     <!-- Notification List -->
     @for (item of notifactionArr; track $index) {
     <div class="notification">
-        <img src="profile-pic.jpg" alt="User Profile" class="profile-pic">
+        <img src="/api/files?f={{item.email}}.png" alt="User Profile" class="profile-pic">
         <div class="notification-content">
             @if (item.action == "liked") {
                 <p><strong>{{item.name}}</strong> and {{item.likes}} others {{item.action}} your post.</p>

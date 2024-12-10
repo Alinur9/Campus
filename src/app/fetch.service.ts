@@ -6,20 +6,21 @@ import { Post ,Comment, PostResponse, User} from './models';
 @Injectable({
   providedIn: 'root'
 })
-export class CommentService {
+export class FetchService {
 
   constructor(private httpClient: HttpClient) { }
 
 
-  getComments(post: Post):Observable<Comment[]>{
-    return this.httpClient.post<Comment[]>("/api/comment", post)
+
+  getPost(post: Post):Observable<Post>{
+    return this.httpClient.post<Post>("/api/fetch", post)
   }
 
   putUserComment(comment: Comment): Observable<PostResponse>{
     return this.httpClient.put<PostResponse>("/api/comment", comment)
   }
 
-//   putComment(comment: Comment): Observable<PostResponse> {
-//     return this.httpClient.post<PostResponse>("/api/comment", comment)
-//   }
+  getUserPost():Observable<Post[]>{
+    return this.httpClient.get<Post[]>("/api/fetch")
+  }
 }

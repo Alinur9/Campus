@@ -38,9 +38,12 @@ export class ProfileComponent implements OnInit{
   name: string = ""
   dept: string = ""
   email: string = ""
+  
+
 
   private cdr = inject(ChangeDetectorRef);
-  constructor(private post: PostService, private login: LoginService, private router: Router, @Inject(DOCUMENT) private document : Document){
+  constructor(private post: PostService, private login: LoginService, private router: Router, 
+    @Inject(DOCUMENT) private document : Document){
 
 }
 
@@ -49,6 +52,9 @@ ngOnInit(): void {
   .subscribe({
     error: e=> console.log("errror: " + e),
     next: user => {
+      if(user.email == "null"){
+        this.router.navigate(["/home"])
+      }
       this.name = user.name
       this.dept = user.department
       this.email = user.email
@@ -62,12 +68,14 @@ this.cdr.detectChanges()
 }
 
 putPost(text: string){
+
   this.post.putUserPost({
    name: this.name, email: this.email,
     text: text, likes : 0, id: this.name, status: "like", comments: 0
   }).subscribe ({
     error: e=> console.log("error: " + e),
     next: postResp => {
+      alert("posted succesfully.. please reload")
       console.log("posted successfully");
     }
   })
@@ -76,7 +84,7 @@ putPost(text: string){
 
 
   tiles: NewsfeedComponent[] = new Array()
-  postArr: Post[] = new Array()
+  postArr:  Post[]= new Array()
   buildFeed(){
      this.post.getPosts()
     .subscribe({
@@ -89,34 +97,37 @@ putPost(text: string){
     })
 
 
+
   }
 
   like( likes: number, email: string, id: string, status: string){
-    if (status === "like")
+    if (status === "like"){
     this.post.putLike({email: email, id: id, likes: likes})
     .subscribe({
       error: e=> console.log("error: " + e),
       next: likedArr => {
+        alert("liked post succesfully.. please reload")
         this.likedArr = likedArr
         console.log("liked a post successfully")
       }
     })
-    else
+  }
+    else{
+      alert("already liked")
     console.log("already liked")
+    }
     
     this.cdr.detectChanges()
   }
 
 
   comment(id: string){
-    const localStorage = this.document.defaultView?.localStorage
-
-    if(localStorage){
-    localStorage.setItem("post", id)
+ 
+     localStorage.setItem("post", id)
     localStorage.setItem("name", this.name)
     localStorage.setItem("email", this.email)
     this.router.navigate(['/comment'])
-    }
+
     
 
   }

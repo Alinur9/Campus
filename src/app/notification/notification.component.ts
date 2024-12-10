@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnInit, inject } from '@angular/core';
 import { NotificationService } from '../notification.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule, DOCUMENT } from '@angular/common';
@@ -24,10 +24,23 @@ import { LoginService } from '../login.service';
   templateUrl: './notification.component.html',
   styleUrl: './notification.component.css'
 })
-export class NotificationComponent {
+export class NotificationComponent implements OnInit {
 
   constructor(private notification: NotificationService, @Inject(DOCUMENT) private document: Document,
               private login : LoginService, private router: Router){
+  }
+  private cdr = inject(ChangeDetectorRef)
+  ngOnInit(): void {
+    this.login.getLoggedUser().subscribe({
+      error: e=> console.log("error : "  + e),
+      next: u => {
+        if(u.email == "null"){
+          this.router.navigate(["/home"])
+        }
+
+      }
+    })
+
     const localStorage = document.defaultView?.localStorage
     let email = localStorage?.getItem("email")
 
@@ -36,7 +49,8 @@ export class NotificationComponent {
     }
 
     this.buildPage(email)
-  }
+    this.cdr.detectChanges()
+}
 
   notifactionArr: Notification[] = new Array()
   action:string = ""
@@ -55,6 +69,8 @@ export class NotificationComponent {
       error: e=> console.log("error: " + e),
       next: str => console.log("logged out")
     })
+
+
     this.router.navigate(["/home"])
   }
   

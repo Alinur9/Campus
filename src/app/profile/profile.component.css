@@ -43,7 +43,10 @@ mat-grid-tile{
 .create-post button:hover {
     background-color: #0056b3;
 }
-
+.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
 /* Post Section */
 .posts .post {
     background-color: #fff;

@@ -3,6 +3,7 @@ package com.bubt.campus3.service;
 import com.bubt.campus3.DBConfig;
 import com.bubt.campus3.Likes;
 import com.bubt.campus3.Post;
+import com.bubt.campus3.User;
 import com.google.gson.Gson;
 
 import javax.servlet.annotation.WebServlet;
@@ -40,7 +41,9 @@ public class PostServlet  extends HttpServlet {
         Likes like = gson.fromJson(request.getReader(), Likes.class);
         System.out.println(like.getEmail());
 
-        DBConfig.putLike(like.getId(), like.getEmail(), like.getLikes());
+        User user = LoginServlet.getLoggedInUser(request);
+
+        DBConfig.putLike(like.getId(), like.getEmail(), user.getEmail(), user.getName(), like.getLikes());
         response.getOutputStream().println("{liked the post successfully}");
 
     }

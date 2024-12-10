@@ -5,7 +5,7 @@
             <a routerLink="/profile">feed</a>
         </p>
         <p>
-            <a routerLink="/user">profile</a>
+            <a routerLink="/p2">profile</a>
         </p>
         <p>   
             <a routerLink="/home">home</a>
@@ -41,7 +41,7 @@
         
                 <div class="post">
                     <div class="post-header">
-                        <img src="profile-pic.jpg" alt="User Profile" class="profile-pic">
+                        <img src="/api/files?f={{post.email}}.png" alt="User Profile" class="profile-pic">
                         <div>
                             <h4>{{post.name}}</h4>
                             <span>2 hrs ago</span>
@@ -58,6 +58,13 @@
                 <div class="newsfeed-container">
                     <!-- Create Post Section -->
                     <div class="create-post">
+                        <div class="post-header">
+                            <img src="/api/files?f={{email}}.png" alt="User Profile" class="profile-pic">
+                            <div>
+                                <h4>{{name}}</h4>
+                                
+                            </div>
+                        </div>
                         <textarea placeholder="make a comment" #text></textarea>
                         <button type="button" (click)="putComment(text.value)">comment</button>
                     </div>
@@ -66,7 +73,7 @@
                 @for (item of comments; track $index) {
                     <div class="post">
                         <div class="post-header">
-                            <img src="profile-pic.jpg" alt="User Profile" class="profile-pic">
+                            <img src="/api/files?f={{item.email}}.png" alt="User Profile" class="profile-pic">
                             <div>
                                 <h4>{{item.name}}</h4>
                                 <span>2 hrs ago</span>

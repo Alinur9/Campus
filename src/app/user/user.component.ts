@@ -26,36 +26,51 @@ import { Subscription } from 'rxjs';
   templateUrl: './user.component.html',
   styleUrl: './user.component.css'
 })
-export class UserComponent implements OnInit{
+export class UserComponent implements OnInit, OnDestroy{
   name: string = ""
   dept: string = "";
   email: string = ""
   user? :User
  
- // sub?: Subscription
+ sub?: Subscription
   private cdr = inject(ChangeDetectorRef);
 
-  constructor(private login: LoginService, private router: Router) {
-    //this.sub = login.user.subscribe(u=>this.user = u)
+  constructor(public login: LoginService, private router: Router) {
+ 
+  }
+  ngOnDestroy(): void {
+    this.sub?.unsubscribe()
   }
 
 
 
   ngOnInit(): void {
-    this.login.getLoggedUser()
-    .subscribe({
-      error: e=> console.log("errror: " + e),
-      next: user => {
-        this.name = user.name
-        this.dept = user.department
-        this.email = user.email
-        this.cdr.detectChanges()
-        console.log("detect change ..")
-       
-        
-      }
-
+    this.user = this.login.user.getValue()
+    
+    this.sub = this.login.user.subscribe(u=>{
+      this.user = u
+      this.cdr.detectChanges()
     })
+    this.login.getLoggedUser().subscribe(
+      u=>this.user = u
+    );
+
+    this.cdr.detectChanges()
+
+    // this.login.getLoggedUser()
+    // .subscribe({
+    //   error: e=> console.log("errror: " + e),
+    //   next: user => {
+
+    //     this.name = user.name
+    //     this.dept = user.department
+    //     this.email = user.email
+    //     this.cdr.detectChanges()
+    //     console.log("detect change ..")
+        
+    //   }
+
+    // })
   }
 
   showNotifications(){

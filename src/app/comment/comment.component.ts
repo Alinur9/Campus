@@ -5,12 +5,11 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { CommentService } from '../comment.service';
 import { Comment, Notification, Post } from '../models';
-import { MatIcon, MatIconModule } from '@angular/material/icon';
+import {  MatIconModule } from '@angular/material/icon';
 import { CommonModule, DOCUMENT } from '@angular/common';
-import { NotificationService } from '../notification.service';
-import { AsyncLocalStorage } from 'async_hooks';
 import { MatButtonModule } from '@angular/material/button';
 import { LoginService } from '../login.service';
+import { FetchService } from '../fetch.service';
 
 @Component({
   selector: 'app-comment',
@@ -33,14 +32,23 @@ export class CommentComponent implements OnInit{
   private cdr = inject(ChangeDetectorRef);
 
   constructor(private comment: CommentService,@Inject(DOCUMENT) private document: Document, 
-              private router: Router, private login: LoginService){
+              private router: Router, private login: LoginService, private fetch: FetchService){
 
 
   }
+  localStorage: Storage | undefined = this.document.defaultView?.localStorage;
+  id: string = "null"
   ngOnInit(): void {
-      
-    const localStorage = document.defaultView?.localStorage;
-    if(localStorage){
+    this.login.getLoggedUser().subscribe({
+      error: e=> console.log("error : "  + e),
+      next: u => {
+        if(u.email == "null"){
+          this.router.navigate(["/home"])
+        }
+      }
+    })
+
+    if(this.localStorage){
      let id = localStorage.getItem("post")
      if( id == null){
       id = "null"      
@@ -51,18 +59,19 @@ export class CommentComponent implements OnInit{
   }
 
   comments : Comment[] = new Array()
-  post: Post = {email:"", name: "", id: "", likes: 0, text: "randomText", status:"loading", comments: 0}
+  post: Post = {email:"", name: "", id: this.id, likes: 0, text: "randomText", status:"loading", comments: 0}
   comms : number = 0
 
   buildPage(id: string){
-    this.comment.getComments(id).subscribe({
+    this.post.id = id;
+    this.comment.getComments(this.post).subscribe({
       error: e=> console.log("error: " + e),
       next: cArr=> {
         this.comments = cArr
         console.log("Comments fetched succesfully")
       }
     })
-    this.comment.getPost(id).subscribe({
+    this.fetch.getPost(this.post).subscribe({
       error: e=> console.log("error: " + e), 
       next: p => {
         this.post = p
@@ -73,9 +82,10 @@ export class CommentComponent implements OnInit{
     })
   }
 
-  localStorage = this.document.defaultView?.localStorage
+ 
+  name = this.localStorage?.getItem("name")
+  email = this.localStorage?.getItem("email")
   putComment(text: string){
-    this.localStorage = document.defaultView?.localStorage;
     if (localStorage){
     let id = localStorage.getItem("post")
     let email = localStorage.getItem("email")
@@ -93,6 +103,7 @@ export class CommentComponent implements OnInit{
       error: e=> console.log("error: " + e),
       next: s => {
         console.log("successfully placed a comment")
+        alert("placed a comment successfully.. please reload")
         this.cdr.detectChanges()
       }
     })

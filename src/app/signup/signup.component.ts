@@ -45,18 +45,17 @@ export class SignupComponent implements OnInit{
 
   ngOnInit(): void {
     this.login.getLoggedUser().subscribe({
-      error: e=> console.log("error: " + e),
+      error: e=> console.log("error : "  + e),
       next: u => {
-        if(u.email === "null"){
+        if(u.email == "null"){
           this.router.navigate(["/signup"])
         }
         else {
-          this.router.navigate(["/user"])
+          this.router.navigate(["/p2"])
         }
       }
     })
-    this.cdr.detectChanges()
-  }
+}
  fb = inject(FormBuilder);
   
 
