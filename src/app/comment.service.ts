@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Post ,Comment, PostResponse} from './models';
+import { Post ,Comment, PostResponse, User} from './models';
 
 @Injectable({
   providedIn: 'root'
@@ -11,11 +11,8 @@ export class CommentService {
   constructor(private httpClient: HttpClient) { }
 
 
-  getPost():Observable<Post>{
-    return this.httpClient.get<Post>(`/api/comment`)
-  }
-  getComments(id: string):Observable<Comment[]>{
-    return this.httpClient.post<Comment[]>(`/api/comment`, id)
+  getComments(post: Post):Observable<Comment[]>{
+    return this.httpClient.post<Comment[]>("/api/comment", post)
   }
 
   putUserComment(comment: Comment): Observable<PostResponse>{

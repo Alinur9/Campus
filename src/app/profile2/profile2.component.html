@@ -1,0 +1,91 @@
+<mat-sidenav-container style="height: 100vh;">
+    
+    <mat-sidenav #sidenav mode="side" opened="false" style="width: 100px;background-color: aliceblue;">
+        <p>
+            <a routerLink="/profile">feed</a>
+        </p>
+        <p>
+            <a routerLink="/p2">profile</a>
+        </p>
+        <p>   
+            <a routerLink="/home">home</a>
+        </p>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+        <div>
+
+        </div>
+        <mat-toolbar color="primary">
+
+            <button mat-icon-button (click)="sidenav.toggle()">
+                <mat-icon>menu</mat-icon>
+            </button>
+
+            <span>Campus.xyz</span>
+            <span class="fill-space"></span>
+
+            <button mat-raised-button color="primary"style="margin-right: 10px; color: aliceblue;" (click)="showNotifications()">
+                <mat-icon>notifications</mat-icon>
+            </button>
+            
+            <button mat-raised-button color="accent" (click)="logOut()">
+                logout
+            </button>
+
+        </mat-toolbar>
+
+
+ <div class="profile-container">
+  <div class="profile-header">
+   <div class="profile-info">
+    <label upload-picture>
+     <img id="profilePicture" src="/api/files?f={{email}}.png" alt="Profile Picture">
+    </label>
+    <button mat-raised-button color="accent" (click)="fileInput.click()">
+        <mat-icon> edit</mat-icon> 
+    </button>
+    <input type="file" #fileInput (change)="uploadPicture($event)" style="display: none;" accept="image/*" >
+    <div>
+     <h2 id="profile-name" style="color: blue;">{{name}} </h2>
+     <p id="profile-bio">Update your Bio</p>
+     <button >Edit Bio</button>
+    </div>
+   </div>
+
+  </div>
+
+  <div class="bio-section">
+   <textarea id="bio-input"></textarea>
+   <button id="save-bio-button">Save Bio</button>
+  </div>
+ </div>
+
+ <div class="posts">
+        
+        @for (item of postArr; track $index) {
+            <div class="post">
+                <div class="post-header">
+                    <img src="/api/files?f={{item.email}}.png" alt="User Profile" class="profile-pic">
+                    <div>
+                        <h4>{{item.name}}</h4>
+                        <span>2 hrs ago</span>
+                    </div>
+                </div>
+                <p class="post-content">
+                    {{item.text}}
+                </p>
+                <div class="post-actions">
+                    <p>{{item.likes}} likes, {{item.comments}} comments</p>
+                </div>
+            </div>
+        }
+    </div>
+
+ <router-outlet></router-outlet>
+
+</mat-sidenav-content>
+</mat-sidenav-container>
+
+
+

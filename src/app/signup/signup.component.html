@@ -62,5 +62,10 @@ margin: auto ;"
   </mat-form-field> -->
 
   <button mat-raised-button color="primary" (click)="showDetails(name.value, dept.value, password.value, email.value)">Submit</button>
+  <router-outlet>
+    <p>
+      <a routerLink="/login">Already have an account?</a>
+    </p>
+  </router-outlet>
 
 </form>

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, Router,RouterModule } from '@angular/router';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle'
@@ -28,14 +28,31 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
     MatToolbarModule,
     MatButton,
     HttpClientModule,
+    RouterModule,
     MatFabButton,],
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers:[HttpClient],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent {
-  constructor(private router:Router, private login: LoginService) {}
+export class LoginComponent implements OnInit {
+  constructor(private router:Router, private login: LoginService) {
+  }
+
+  ngOnInit(): void {
+    this.login.getLoggedUser().subscribe({
+      error: e=> console.log("error : "  + e),
+      next: u => {
+        if(u.email == "null"){
+          this.router.navigate(["/login"])
+        }
+        else {
+          this.router.navigate(["/p2"])
+        }
+      }
+    })
+}
+
   fb = inject(FormBuilder);
   
 
@@ -51,7 +68,7 @@ export class LoginComponent {
     .subscribe(
       {error: e=>console.log("error: " + e),
        next: logResp => {console.log("success")
-       this.router.navigate(['/user'])
+       this.router.navigate(['/p2'])
        
     }
     }

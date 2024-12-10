@@ -1,31 +1,61 @@
+<mat-sidenav-container style="height: 100vh;">
+    
+    <mat-sidenav #sidenav mode="side" opened="false" style="width: 100px;background-color: aliceblue;">
+        <p>
+            <a routerLink="/profile">feed</a>
+        </p>
+        <p>
+            <a routerLink="/p2">profile</a>
+        </p>
+        <p>   
+            <a routerLink="/home">home</a>
+        </p>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+        <div>
+
+        </div>
+        <mat-toolbar color="primary">
+
+            <button mat-icon-button (click)="sidenav.toggle()">
+                <mat-icon>menu</mat-icon>
+            </button>
+
+            <span>Campus.xyz</span>
+            <span class="fill-space"></span>
+
+            <button mat-raised-button color="primary"style="margin-right: 10px; color: aliceblue;">
+                <mat-icon>notifications</mat-icon>
+            </button>
+            
+            <button mat-raised-button color="accent" (click)="logOut()">
+                logout
+            </button>
+
+        </mat-toolbar>
+
+
+
 <div class="notifications-container">
     <!-- Notification Header -->
     <h2>Notifications</h2>
 
     <!-- Notification List -->
+    @for (item of notifactionArr; track $index) {
     <div class="notification">
-        <img src="profile-pic.jpg" alt="User Profile" class="profile-pic">
+        <img src="/api/files?f={{item.email}}.png" alt="User Profile" class="profile-pic">
         <div class="notification-content">
-            <p><strong>Jony</strong> liked your post.</p>
+            @if (item.action == "liked") {
+                <p><strong>{{item.name}}</strong> and {{item.likes}} others {{item.action}} your post.</p>
+            }@else {
+                <p><strong>{{item.name}}</strong> and {{item.comments}} others {{item.action}} your post.</p> 
+            }
             <span>2 mins ago</span>
         </div>
     </div>
-
-    <div class="notification">
-        <img src="profile-pic.jpg" alt="User Profile" class="profile-pic">
-        <div class="notification-content">
-            <p><strong>Ali Nur</strong> commented on your photo.</p>
-            <span>10 mins ago</span>
-        </div>
-    </div>
-
-    <div class="notification">
-        <img src="profile-pic.jpg" alt="User Profile" class="profile-pic">
-        <div class="notification-content">
-            <p><strong>Faizer</strong> followed you.</p>
-            <span>1 hr ago</span>
-        </div>
-    </div>
-
-    <!-- Add more notifications here -->
+}  <!-- Add more notifications here -->
 </div>
+
+</mat-sidenav-content>
+</mat-sidenav-container>

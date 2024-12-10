@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatButton, MatFabButton } from '@angular/material/button';
@@ -9,6 +9,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
+import { LoginService } from '../login.service';
+import e from 'express';
 
 @Component({
   selector: 'app-home',
@@ -28,10 +30,23 @@ import { Router, RouterModule, RouterOutlet } from '@angular/router';
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent {
-  constructor(private router: Router) { }
+export class HomeComponent implements OnInit {
+  constructor(private router: Router, private log: LoginService) { }
   title = 'campus';
- 
+
+  ngOnInit(): void {
+      this.log.getLoggedUser().subscribe({
+        error: e=> console.log("error : "  + e),
+        next: u => {
+          if(u.email == "null"){
+            this.router.navigate(["/home"])
+          }
+          else {
+            this.router.navigate(["/p2"])
+          }
+        }
+      })
+  }
   
   login(){
     this.router.navigate(['/login'])

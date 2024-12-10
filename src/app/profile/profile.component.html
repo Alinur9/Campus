@@ -5,7 +5,7 @@
             <a routerLink="/profile">feed</a>
         </p>
         <p>
-            <a routerLink="/user">profile</a>
+            <a routerLink="/p2">profile</a>
         </p>
         <p>   
             <a routerLink="/home">home</a>
@@ -13,19 +13,42 @@
     </mat-sidenav>
 
     <mat-sidenav-content>
+        <div>
+
+        </div>
         <mat-toolbar color="primary">
 
             <button mat-icon-button (click)="sidenav.toggle()">
                 <mat-icon>menu</mat-icon>
             </button>
 
-        Campus.xyz</mat-toolbar>
+            <span>Campus.xyz</span>
+            <span class="fill-space"></span>
+
+            <button mat-raised-button color="primary"style="margin-right: 10px; color: aliceblue;" (click)="showNotifications()">
+                <mat-icon>notifications</mat-icon>
+            </button>
+            
+            <button mat-raised-button color="accent" (click)="logOut()">
+                logout
+            </button>
+
+        </mat-toolbar>
+
+ 
+
 
         <div class="newsfeed-container">
             <!-- Create Post Section -->
             <div class="create-post">
+                <div class="post-header">
+                    <img src= "/api/files?f={{email}}.png" alt="User Profile" class="profile-pic">
+                    <div>
+                        <h4>{{name}}</h4>
+                    </div>
+                </div>
                 <textarea placeholder="What's on your mind?" #text></textarea>
-                <button type="button" (click)="putPost(text.value)">Post</button>
+                <button type="button" #btn (click)="putPost(text.value)">Post</button>
             </div>
         </div>  
         
@@ -35,7 +58,7 @@
         @for (item of postArr; track $index) {
             <div class="post">
                 <div class="post-header">
-                    <img src="profile-pic.jpg" alt="User Profile" class="profile-pic">
+                    <img src="/api/files?f={{item.email}}.png" alt="User Profile" class="profile-pic">
                     <div>
                         <h4>{{item.name}}</h4>
                         <span>2 hrs ago</span>
@@ -60,5 +83,7 @@
             }
         </mat-grid-list> -->
         <router-outlet></router-outlet>
+
+
     </mat-sidenav-content>
 </mat-sidenav-container>

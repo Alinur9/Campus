@@ -38,6 +38,14 @@ export interface Comment {
     text: string
     comments: number
 }
+export interface Notification {
+    name: string
+    id: string
+    email: string
+    action: string
+    likes: number
+    comments: number
+}
 
 export interface PostResponse{
     msg : string

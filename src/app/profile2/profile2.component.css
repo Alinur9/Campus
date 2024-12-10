@@ -1,0 +1,149 @@
+
+body {
+font-family: Arial, sans-serif;
+margin: 0;
+padding: 0;
+background-color: #f0f2f5;
+}
+
+.profile-container {
+max-width: 800px;
+margin: 20px auto;
+background: #fff;
+border-radius: 8px;
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+padding: 20px;
+}
+
+.profile-header {
+display: flex;
+align-items: center;
+justify-content: space-between;
+}
+
+.profile-info {
+display: flex;
+align-items: center;
+gap: 20px;
+}
+
+.profile-info img {
+width: 100px;
+height: 100px;
+border-radius: 50%;
+object-fit: cover;
+cursor: pointer;
+}
+
+.profile-info button {
+padding: 10px 15px;
+border: none;
+border-radius: 5px;
+background-color: #1877f2;
+color: #fff;
+cursor: pointer;
+}
+
+.profile-info button:hover {
+background-color: #145dbf;
+}
+
+.profile-actions button {
+margin-left: 10px;
+padding: 10px 15px;
+border: none;
+border-radius: 5px;
+background-color: #555;
+color: #fff;
+cursor: pointer;
+}
+
+.profile-actions button:hover {
+background-color: #333;
+}
+
+.bio-section {
+margin-top: 20px;
+}
+
+.bio-section textarea {
+width: 100%;
+padding: 10px;
+border-radius: 5px;
+border: 1px solid #ddd;
+font-size: 14px;
+display: none;
+}
+
+.bio-section button {
+margin-top: 10px;
+padding: 8px 12px;
+border: none;
+border-radius: 5px;
+background-color: #1877f2;
+color: #fff;
+cursor: pointer;
+display: none;
+}
+
+.bio-section button:hover {
+background-color: #145dbf;
+}
+
+.posts .post {
+    background-color: #fff;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.post-header .profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.post-header h4 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.post-header span {
+    font-size: 12px;
+    color: #888;
+}
+
+.post-content {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.post-actions {
+    display: flex;
+    justify-content: space-around;
+}
+
+.post-actions button {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+}
+
+.post-actions button:hover {
+    color: #0056b3;
+}
+
+.fill-space {
+    flex: 1 1 auto;
+}
+
+

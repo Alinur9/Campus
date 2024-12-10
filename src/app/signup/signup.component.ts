@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject, signal } from '@angular/core';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle'
 import { MatInputModule } from '@angular/material/input'
@@ -12,6 +12,7 @@ import { MatButton, MatFabButton } from '@angular/material/button';
 import { RegistrationService } from '../registration.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { MatIconModule } from '@angular/material/icon';
+import { LoginService } from '../login.service';
 
 @Component({
   selector: 'app-signup',
@@ -35,8 +36,26 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.css'
 })
-export class SignupComponent {
-  constructor(private router: Router, private regService: RegistrationService) { }
+export class SignupComponent implements OnInit{
+
+  private cdr = inject(ChangeDetectorRef)
+  constructor(private router: Router, private regService: RegistrationService, private login: LoginService) { 
+
+  }
+
+  ngOnInit(): void {
+    this.login.getLoggedUser().subscribe({
+      error: e=> console.log("error : "  + e),
+      next: u => {
+        if(u.email == "null"){
+          this.router.navigate(["/signup"])
+        }
+        else {
+          this.router.navigate(["/p2"])
+        }
+      }
+    })
+}
  fb = inject(FormBuilder);
   
 
